@@ -17,13 +17,18 @@ public:
     MatHang();
     ~MatHang();
 
-    void Nhap();
+    void Nhap(bool nhapMa = true);
     void Xuat();
 
     string GetMaHang();
     string GetHanDung();
     int GetSoLuong();
+    string GetTenHang();
+    string GetCongTy();
+    int GetNamSX();
+    string GetMaLoai();
     void SetSoLuong(int sl);
+    void SetMaHang(const string &ma);
 
     string ToCSV();
     void FromCSV(const string& line);

@@ -16,6 +16,8 @@ public:
     void Xuat();
 
     string GetMaLoai();
+    void SetMaLoai(const string &ma);
+
     string ToCSV();
     void FromCSV(const string& line);
 };

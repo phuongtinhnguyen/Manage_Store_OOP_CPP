@@ -1,6 +1,7 @@
 #include "MatHang.h"
 #include <fstream>
 #include <sstream>
+#include <iomanip> // cần để dùng setw, left, right
 
 MatHang::MatHang() {
     maHang = "";
@@ -14,35 +15,40 @@ MatHang::MatHang() {
 
 MatHang::~MatHang() {}
 
-void MatHang::Nhap() {
-    cout << "Nhap ma hang: ";
-    cin >> maHang;
-    cin.ignore();
+void MatHang::Nhap(bool nhapMa) {
+    if (nhapMa) {
+        cout << "Nhap ma hang: ";
+        cin >> maHang;
+        cin.ignore();
+    }
     cout << "Nhap ten hang: ";
     getline(cin, tenHang);
-    cout << "Nhap han dung (YYYY-MM-DD): ";
+    cout << "Nhap han dung (DD-MM-YYYY): ";
     getline(cin, hanDung);
     cout << "Nhap cong ty san xuat: ";
     getline(cin, congTy);
     cout << "Nhap nam san xuat: ";
     cin >> namSX;
+    cin.ignore();
     cout << "Nhap ma loai: ";
     cin >> maLoai;
+    cin.ignore();
     cout << "Nhap so luong: ";
     cin >> soLuong;
+    cin.ignore();
 }
 
 void MatHang::Xuat() {
-    cout << "Ma: " << maHang
-         << " | Ten: " << tenHang
-         << " | HanDung: " << hanDung
-         << " | CongTy: " << congTy
-         << " | NamSX: " << namSX
-         << " | MaLoai: " << maLoai
-         << " | SoLuong: " << soLuong
+    cout << left 
+         << setw(6) << maHang
+         << " | " << setw(20) << tenHang
+         << " | " << setw(12) << hanDung
+         << " | " << setw(15) << congTy
+         << " | " << setw(6) << namSX
+         << " | " << setw(6) << maLoai
+         << " | " << setw(6) << soLuong
          << endl;
 }
-
 string MatHang::GetMaHang() {
     return maHang;
 }
@@ -55,8 +61,21 @@ int MatHang::GetSoLuong() {
     return soLuong;
 }
 
+string MatHang::GetTenHang() { return tenHang; }
+string MatHang::GetCongTy() { return congTy; }
+int MatHang::GetNamSX() { return namSX; }
+string MatHang::GetMaLoai() { return maLoai; }
+
 void MatHang::SetSoLuong(int sl) {
+    if (sl < 0) {
+        // Không cập nhật, giữ nguyên số lượng cũ
+        return;
+    }
     soLuong = sl;
+}
+
+void MatHang::SetMaHang(const string &ma) {
+    maHang = ma;
 }
 
 string MatHang::ToCSV() {
@@ -72,7 +91,9 @@ void MatHang::FromCSV(const string& line) {
     getline(ss, tenHang, ',');
     getline(ss, hanDung, ',');
     getline(ss, congTy, ',');
-    getline(ss, tmp, ','); namSX = stoi(tmp);
+    getline(ss, tmp, ',');
+    namSX = stoi(tmp);
     getline(ss, maLoai, ',');
-    getline(ss, tmp, ','); soLuong = stoi(tmp);
+    getline(ss, tmp, ',');
+    soLuong = stoi(tmp);
 }

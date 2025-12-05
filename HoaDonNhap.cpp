@@ -1,8 +1,91 @@
 #include "HoaDonNhap.h"
+#include "QuanLyHoaDon.h"
+#include "QuanLyMatHang.h"
 #include <sstream>
+#include <iostream>
+using namespace std;
 
-HoaDonNhap::HoaDonNhap() : HoaDon() {}
+HoaDonNhap::HoaDonNhap() : HoaDon() {
+    loai = LoaiHoaDon::Nhap;
+}
 HoaDonNhap::~HoaDonNhap() {}
+
+void HoaDonNhap::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
+    cout << "Hoa Don Nhap:" << endl;
+
+    if (!qlMH)
+    { 
+        cout << "Chua gan QuanLyMatHang!\n";
+        return;
+    }
+
+    if (!qlHD)
+    { 
+        cout << "Chua gan QuanLyHoaDon!\n";
+        return;
+    }
+
+    // Nhap: ngayLap, maHD
+    HoaDon::Nhap(qlMH, qlHD);
+
+    // Kiểm tra maHD
+    // while (qlHD->TimTheoMa(maHD))
+    // {
+    //     cout << "Ma hoa don bi trung!";
+    //     cout << "Vui long nhap lai ma hoa don khac: ";
+    //     cin >> maHD;
+    // }
+    // Nhap moi hoa don thi kiem tra, sua hoa don (da ton tai maHang) thi khong kiem tra
+    if(maHang == "") 
+    {
+        while (true) {
+            HoaDon* hd = qlHD->TimTheoMa(maHD, loai);
+            if (!hd || hd->GetLoai() != LoaiHoaDon::Nhap)
+                break;
+            cout << "Ma hoa don bi trung! Nhap lai: ";
+            cin >> maHD;
+        }
+    }
+
+
+    // Nhap maHang
+    cout << "Nhap ma hang: ";
+    cin >> maHang;
+
+    // Kiem tra maHang
+    MatHang* mh = qlMH->TimTheoMa(maHang);
+    if (!mh) {
+        cout << "Ma hang chua ton tai, tao moi.\n";
+        mh = new MatHang();
+        mh->SetMaHang(maHang);
+        mh->Nhap(false);
+        qlMH->ThemMatHangMoi(mh);
+        soLuong = mh->GetSoLuong();
+    } else {
+        cout << "Nhap so luong nhap: ";
+        cin >> soLuong;
+        if (soLuong <= 0)
+        {
+            cout << "So luong khong hop le!\n";
+            return;
+        }
+        mh->SetSoLuong(mh->GetSoLuong() + soLuong);
+    }
+
+    cout << "Da them hoa don nhap.\n";
+}
+
+void HoaDonNhap::Xuat() {
+    cout << "[NHAP] MaHD: " << maHD
+         << " | Ngay: " << ngayLap
+         << " | MaHang: " << maHang
+         << " | SoLuong: " << soLuong << "\n";
+}
+
+LoaiHoaDon HoaDonNhap::GetLoai()
+{ 
+    return loai; 
+}
 
 string HoaDonNhap::ToCSV() {
     stringstream ss;

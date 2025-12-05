@@ -1,121 +1,323 @@
 #include "QuanLyHoaDon.h"
+#include <iostream>
 #include <fstream>
 #include <sstream>
+#include <regex>
+using namespace std;
 
-QuanLyHoaDon::QuanLyHoaDon() {
-    soLuong = 0;
-    for (int i = 0; i < 500; ++i) ds[i] = nullptr;
+QuanLyHoaDon::QuanLyHoaDon() : soLuong(0) {
+    for (int i = 0; i < 500; ++i)
+        {
+            ds[i] = nullptr;
+        }
 }
 
 QuanLyHoaDon::~QuanLyHoaDon() {
-    for (int i = 0; i < soLuong; ++i) if (ds[i]) delete ds[i];
+    for (int i = 0; i < soLuong; ++i)
+        if (ds[i]) delete ds[i];
 }
 
-void QuanLyHoaDon::ThemBan() {
-    if (soLuong >= 500) { cout << "Danh sach day.\n"; return; }
-    HoaDonBan* p = new HoaDonBan();
-    p->Nhap();
-    ds[soLuong++] = p;
+void QuanLyHoaDon::SetQLMH(QuanLyMatHang* p)
+{
+    qlMH = p;
 }
 
-void QuanLyHoaDon::ThemNhap() {
-    if (soLuong >= 500) { cout << "Danh sach day.\n"; return; }
-    HoaDonNhap* p = new HoaDonNhap();
-    p->Nhap();
-    ds[soLuong++] = p;
-}
-
-int findHDIndex(HoaDon* arr[], int n, const string& ma) {
-    for (int i = 0; i < n; ++i) if (arr[i]) {
-        // we don't have getter for maHD; parse ToCSV first
-        string csv = arr[i]->ToCSV();
-        // maHD is first token
-        string token;
-        stringstream ss(csv);
-        getline(ss, token, ',');
-        if (token == ma) return i;
+void QuanLyHoaDon::Them() {
+    int chonLoai;
+    do {
+        cout << "Nhap loai hoa don (1. Hoa don ban, 2. Hoa don nhap): ";
+        cin >> chonLoai;
     }
-    return -1;
+    while (chonLoai != 1 && chonLoai !=2);
+
+    if(chonLoai == 1)
+    {
+        ds[soLuong] = new HoaDonBan();
+    }
+    else
+    {
+        ds[soLuong] = new HoaDonNhap();
+    }
+    ds[soLuong]->Nhap(qlMH, this);
+    soLuong++;
+    cout << "Da them hoa don.\n";
 }
 
 void QuanLyHoaDon::Xoa() {
-    cout << "Nhap ma hoa don can xoa: ";
-    string ma; cin >> ma;
-    int idx = -1;
-    for (int i = 0; i < soLuong; ++i) {
-        if (!ds[i]) continue;
-        string csv = ds[i]->ToCSV();
-        string token;
-        stringstream ss(csv);
-        getline(ss, token, ',');
-        if (token == ma) { idx = i; break; }
+
+    int chonLoai;
+    LoaiHoaDon loai;
+    do {
+        cout << "Nhap loai hoa don (1. Hoa don ban, 2. Hoa don nhap): ";
+        cin >> chonLoai;
     }
-    if (idx == -1) { cout << "Khong tim thay.\n"; return; }
+    while (chonLoai != 1 && chonLoai !=2);
+
+    if(chonLoai == 1)
+    {
+        loai = LoaiHoaDon::Ban;
+    }
+    else
+    {
+        loai = LoaiHoaDon::Nhap;
+    }
+
+    string ma;
+    cout << "Nhap ma hoa don can xoa: ";
+    cin >> ma;
+    int idx = -1;
+    for (int i = 0; i < soLuong; ++i)
+    {
+        if (ds[i] && ds[i]->GetMaHD() == ma && ds[i]->GetLoai() == loai)
+        {
+            idx = i;
+            break;
+        }
+    }
+    if (idx == -1)
+    {
+        cout << "Khong tim thay.\n";
+        return;
+    }
+
+    // Rollback kho truoc khi xoa
+    MatHang* mh = qlMH->TimTheoMa(ds[idx]->GetMaHang());
+    if(ds[idx]->GetLoai() == LoaiHoaDon::Ban)
+    {
+        if (mh) {
+            mh->SetSoLuong(mh->GetSoLuong() + ds[idx]->GetSoLuong());
+        }
+    }
+    else
+    {
+        if (mh) {
+            // mh->SetSoLuong(mh->GetSoLuong() - ds[idx]->GetSoLuong());
+
+            if (ds[idx]->GetLoai() == LoaiHoaDon::Nhap) {
+                if (mh->GetSoLuong() < ds[idx]->GetSoLuong()) {
+                    cout << "Khong the xoa. Ton kho khong du de rollback!\n";
+                    return;
+                }
+                mh->SetSoLuong(mh->GetSoLuong() - ds[idx]->GetSoLuong());
+            }
+
+        }
+    }
+
     delete ds[idx];
-    for (int i = idx; i < soLuong - 1; ++i) ds[i] = ds[i+1];
+    for (int i = idx; i < soLuong - 1; ++i)
+    {
+        ds[i] = ds[i + 1];
+    }
     ds[--soLuong] = nullptr;
     cout << "Da xoa.\n";
 }
 
 void QuanLyHoaDon::Sua() {
-    cout << "Nhap ma hoa don can sua: ";
-    string ma; cin >> ma;
-    int idx = -1;
-    for (int i = 0; i < soLuong; ++i) {
-        if (!ds[i]) continue;
-        string csv = ds[i]->ToCSV();
-        string token;
-        stringstream ss(csv);
-        getline(ss, token, ',');
-        if (token == ma) { idx = i; break; }
+    int chonLoai;
+    LoaiHoaDon loai;
+    do {
+        cout << "Nhap loai hoa don (1. Hoa don ban, 2. Hoa don nhap): ";
+        cin >> chonLoai;
     }
-    if (idx == -1) { cout << "Khong tim thay.\n"; return; }
-    cout << "Nhap thong tin moi:\n";
-    ds[idx]->Nhap();
+    while (chonLoai != 1 && chonLoai !=2);
+
+    if(chonLoai == 1)
+    {
+        loai = LoaiHoaDon::Ban;
+        
+    }
+    else
+    {
+        loai = LoaiHoaDon::Nhap;
+    }
+
+    string ma;
+    cout << "Nhap ma hoa don can sua: ";
+    cin >> ma;
+    int idx = -1;
+    for (int i = 0; i < soLuong; ++i)
+    {
+        if (ds[i] && ds[i]->GetMaHD() == ma && ds[i]->GetLoai() == loai)
+        {
+            idx = i;
+            break;
+        }
+    }
+    if (idx == -1)
+    {
+        cout << "Khong tim thay.\n";
+        return;
+    }
+
+    // Rollback kho truoc khi sua
+    MatHang* mh = qlMH->TimTheoMa(ds[idx]->GetMaHang());
+    if(ds[idx]->GetLoai() == LoaiHoaDon::Ban)
+    {
+        if (mh) {
+            mh->SetSoLuong(mh->GetSoLuong() + ds[idx]->GetSoLuong()); 
+        }
+    }
+    else
+    {
+        if (mh) {
+            // mh->SetSoLuong(mh->GetSoLuong() - ds[idx]->GetSoLuong());
+
+            if (ds[idx]->GetLoai() == LoaiHoaDon::Nhap) {
+                if (mh->GetSoLuong() < ds[idx]->GetSoLuong()) {
+                    cout << "Khong the xoa. Ton kho khong du de rollback!\n";
+                    return;
+                }
+                mh->SetSoLuong(mh->GetSoLuong() - ds[idx]->GetSoLuong());
+            }
+
+        }
+    }
+    ds[idx]->Nhap(qlMH, this);
     cout << "Da cap nhat.\n";
 }
 
+// void QuanLyHoaDon::TimKiem() {
+//     string key; cout << "Nhap ma hoa don hoac ma hang can tim: "; cin >> key;
+//     bool ok = false;
+//     for (int i = 0; i < soLuong; ++i)
+//         if (ds[i] && (ds[i]->GetMaHD() == key || ds[i]->GetMaHang() == key)) {
+//             ds[i]->Xuat(); ok = true;
+//         }
+//     if (!ok) cout << "Khong co ket qua.\n";
+// }
+
 void QuanLyHoaDon::TimKiem() {
+    int loai;
+    cout << "Chon loai hoa don can tim:\n";
+    cout << "1. Hoa don ban\n";
+    cout << "2. Hoa don nhap\n";
+    cout << "Nhap lua chon: ";
+    cin >> loai;
+
+    while (loai != 1 && loai != 2) {
+        cout << "Lua chon khong hop le. Nhap lai (1-Ban, 2-Nhap): ";
+        cin >> loai;
+    }
+
+    string key;
     cout << "Nhap ma hoa don hoac ma hang can tim: ";
-    string key; cin >> key;
+    cin >> key;
+
     bool ok = false;
+
     for (int i = 0; i < soLuong; ++i) {
         if (!ds[i]) continue;
-        string csv = ds[i]->ToCSV();
-        if (csv.find(key) != string::npos) {
+
+        // Lọc theo loại
+        if ((loai == 1 && ds[i]->GetLoai() != LoaiHoaDon::Ban) ||
+            (loai == 2 && ds[i]->GetLoai() != LoaiHoaDon::Nhap))
+            continue;
+
+        // Lọc theo mã
+        if (ds[i]->GetMaHD() == key || ds[i]->GetMaHang() == key) {
             ds[i]->Xuat();
             ok = true;
         }
     }
+
     if (!ok) cout << "Khong co ket qua.\n";
 }
 
+
+// void QuanLyHoaDon::HienThi(LoaiHoaDon loai) {
+//     cout << "Danh sach hoa don " << (loai == LoaiHoaDon::Ban ? "BAN" : "NHAP") << ":\n";
+//     for (int i = 0; i < soLuong; ++i)
+//         if (ds[i] && ds[i]->GetLoai() == loai)
+//             ds[i]->Xuat();
+// }
+
 void QuanLyHoaDon::HienThi() {
-    cout << "Danh sach hoa don:\n";
-    for (int i = 0; i < soLuong; ++i) if (ds[i]) ds[i]->Xuat();
+    int chon;
+    cout << "\n=== CHON LOAI HOA DON DE HIEN THI ===\n";
+    cout << "1. HOA DON BAN\n";
+    cout << "2. HOA DON NHAP\n";
+    cout << "Chon: ";
+    cin >> chon;
+
+    LoaiHoaDon loai;
+    if (chon == 1)
+        loai = LoaiHoaDon::Ban;
+    else if (chon == 2)
+        loai = LoaiHoaDon::Nhap;
+    else {
+        cout << "Lua chon khong hop le!\n";
+        return;
+    }
+
+    cout << "\nDanh sach hoa don "
+         << (loai == LoaiHoaDon::Ban ? "BAN" : "NHAP") << ":\n";
+
+    bool found = false;
+    for (int i = 0; i < soLuong; ++i) {
+        if (ds[i] && ds[i]->GetLoai() == loai) {
+            ds[i]->Xuat();
+            found = true;
+        }
+    }
+
+    if (!found)
+        cout << "Khong co hoa don nao thuoc loai nay!\n";
 }
 
-void QuanLyHoaDon::DocCSV(const string& file, bool laHoaDonBan) {
+
+// HoaDon* QuanLyHoaDon::TimTheoMa(const string& ma) {
+//     for (int i = 0; i < soLuong; ++i)
+//         if (ds[i] && ds[i]->GetMaHD() == ma)
+//             return ds[i];
+//     return nullptr;
+// }
+
+HoaDon* QuanLyHoaDon::TimTheoMa(const string& ma, LoaiHoaDon loai) {
+    for (int i = 0; i < soLuong; ++i) {
+        if (ds[i] 
+            && ds[i]->GetMaHD() == ma 
+            && ds[i]->GetLoai() == loai)
+        {
+            return ds[i];
+        }
+    }
+    return nullptr;
+}
+
+void QuanLyHoaDon::DocCSV(const string& file, LoaiHoaDon loai) {
     ifstream ifs(file);
     if (!ifs.is_open()) return;
+
     string line;
     while (getline(ifs, line)) {
-        if (line.size() == 0) continue;
-        if (laHoaDonBan) {
-            HoaDonBan* p = new HoaDonBan();
-            p->FromCSV(line);
-            ds[soLuong++] = p;
-        } else {
-            HoaDonNhap* p = new HoaDonNhap();
-            p->FromCSV(line);
-            ds[soLuong++] = p;
+        if (line.empty()) continue;
+
+        HoaDon* p = (loai == LoaiHoaDon::Ban) ? (HoaDon*)new HoaDonBan() : (HoaDon*)new HoaDonNhap();
+        p->FromCSV(line);
+
+        // Nếu đã có hóa đơn cùng mã và cùng loại => skip để tránh duplicate
+        if (TimTheoMa(p->GetMaHD(), loai) != nullptr) {
+            delete p;
+            continue;
         }
+
+        if (soLuong >= 500) {
+            cout << "Vuot qua gioi han 500 hoa don!\n";
+            delete p;
+            ifs.close();
+            return;
+        }
+        ds[soLuong++] = p;
     }
     ifs.close();
 }
 
-void QuanLyHoaDon::GhiCSV(const string& file) {
-    ofstream ofs(file);
-    for (int i = 0; i < soLuong; ++i) if (ds[i]) ofs << ds[i]->ToCSV() << "\n";
+
+void QuanLyHoaDon::GhiCSV(const string& file, LoaiHoaDon loai) {
+    ofstream ofs(file); if (!ofs.is_open()) return;
+    for (int i = 0; i < soLuong; ++i)
+        if (ds[i] && ds[i]->GetLoai() == loai)
+            ofs << ds[i]->ToCSV() << "\n";
     ofs.close();
 }

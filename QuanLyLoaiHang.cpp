@@ -1,6 +1,7 @@
 #include "QuanLyLoaiHang.h"
 #include <fstream>
 #include <sstream>
+#include "Module.h"
 
 QuanLyLoaiHang::QuanLyLoaiHang() {
     soLuong = 0;
@@ -18,10 +19,29 @@ void QuanLyLoaiHang::Them() {
         cout << "Danh sach day.\n";
         return;
     }
+
+    string ma;
+    cout << "Nhap ma loai: ";
+    cin >> ma;
+
+    // kiểm tra mã loại trùng
+    for (int i = 0; i < soLuong; ++i) {
+        if (ds[i] && ds[i]->GetMaLoai() == ma) {
+            cout << "Ma loai da ton tai! Khong the them.\n";
+            return;
+        }
+    }
+
+    // nếu không trùng thì tạo và nhập tên
     LoaiHang* p = new LoaiHang();
-    p->Nhap();
+    p->SetMaLoai(ma);
+    cin.ignore(); // dọn bộ nhớ đệm trước getline
+    p->Nhap();    // chỉ nhập tên loai
     ds[soLuong++] = p;
+
+    cout << "Da them loai hang.\n";
 }
+
 
 int findIndex(LoaiHang* arr[], int n, const string& ma) {
     for (int i = 0; i < n; ++i) if (arr[i] && arr[i]->GetMaLoai() == ma) return i;
@@ -54,27 +74,29 @@ void QuanLyLoaiHang::Sua() {
 
 void QuanLyLoaiHang::TimKiem() {
     cout << "Nhap ma hoac ten can tim: ";
-    string key; cin.ignore();
+    string key; 
+    cin.ignore();
     getline(cin, key);
+    key = ToLower(key);  // chuyển key về chữ thường
+
     bool ok = false;
-    for (int i = 0; i < soLuong; ++i)
-    {
-        if (ds[i])
-        {
-            if (ds[i]->GetMaLoai() == key)
-            {
-                ds[i]->Xuat(); ok = true;
-            }
-            else
-            {
-                string csv = ds[i]->ToCSV();
-                if (csv.find(key) != string::npos)
-                { 
-                    ds[i]->Xuat(); ok = true;
+    for (int i = 0; i < soLuong; ++i) {
+        if (ds[i]) {
+            // so sánh mã loại
+            if (ToLower(ds[i]->GetMaLoai()) == key) {
+                ds[i]->Xuat();
+                ok = true;
+            } else {
+                // hoặc tìm trong CSV
+                string csv = ToLower(ds[i]->ToCSV());
+                if (csv.find(key) != string::npos) {
+                    ds[i]->Xuat();
+                    ok = true;
                 }
             }
         }
     }
+
     if (!ok) cout << "Khong co ket qua.\n";
 }
 
@@ -93,6 +115,11 @@ void QuanLyLoaiHang::DocCSV(const string& file) {
         if (line.size() == 0) continue;
         LoaiHang* p = new LoaiHang();
         p->FromCSV(line);
+        if (soLuong >= 200) {
+            cout << "Vuot qua gioi han 200 loai hang!\n";
+            delete p;
+            return;
+        }
         ds[soLuong++] = p;
     }
     ifs.close();

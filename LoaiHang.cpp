@@ -5,10 +5,7 @@ LoaiHang::LoaiHang() {}
 LoaiHang::~LoaiHang() {}
 
 void LoaiHang::Nhap() {
-    cout << "Nhap ma loai: ";
-    cin >> maLoai;
     cout << "Nhap ten loai: ";
-    cin.ignore();
     getline(cin, tenLoai);
 }
 
@@ -18,6 +15,10 @@ void LoaiHang::Xuat() {
 }
 
 string LoaiHang::GetMaLoai() { return maLoai; }
+
+void LoaiHang::SetMaLoai(const string &ma) {
+    maLoai = ma;
+}
 
 string LoaiHang::ToCSV() {
     return maLoai + "," + tenLoai;

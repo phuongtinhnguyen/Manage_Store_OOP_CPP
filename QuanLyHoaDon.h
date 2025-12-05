@@ -1,23 +1,34 @@
 #pragma once
 #include "HoaDonBan.h"
 #include "HoaDonNhap.h"
+#include "QuanLyMatHang.h"
+#include <string>
+using namespace std;
 
 class QuanLyHoaDon {
 private:
     HoaDon* ds[500];
     int soLuong;
+    QuanLyMatHang* qlMH;
 
 public:
     QuanLyHoaDon();
     ~QuanLyHoaDon();
 
-    void ThemBan();
-    void ThemNhap();
+    void Them();
     void Xoa();
     void Sua();
     void TimKiem();
     void HienThi();
 
-    void DocCSV(const string& file, bool laHoaDonBan);
-    void GhiCSV(const string& file);
+    void SetQLMH(QuanLyMatHang* p);
+
+    HoaDon* TimTheoMa(const string& ma, LoaiHoaDon loai);
+    
+    int GetSoLuong() const {
+        return soLuong;
+    }
+
+    void DocCSV(const string& file, LoaiHoaDon loai);
+    void GhiCSV(const string& file, LoaiHoaDon loai);
 };

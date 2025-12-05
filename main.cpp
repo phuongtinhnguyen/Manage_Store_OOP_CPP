@@ -51,48 +51,38 @@ void MenuMatHang(QuanLyMatHang &ql) {
 }
 
 void MenuHoaDon(QuanLyHoaDon &ql) {
-    int chon;
+    int chonChucNang;
     do {
         cout << "\n=== QUAN LY HOA DON ===\n";
-        cout << "1. Quan ly HOA DON BAN\n";
-        cout << "2. Quan ly HOA DON NHAP\n";
+        cout << "1. Them hoa don\n";
+        cout << "2. Xoa hoa don\n";
+        cout << "3. Sua hoa don\n";
+        cout << "4. Tim kiem hoa don\n";
+        cout << "5. Hien thi danh sach\n";
         cout << "0. Quay lai\n";
         cout << "Chon: ";
-        cin >> chon;
+        cin >> chonChucNang;
 
-        if (chon == 1 || chon == 2) {
-            bool laBan = (chon == 1);
-            int c2;
-            do {
-                cout << "\n=== ";
-                if (laBan) cout << "HOA DON BAN ===\n";
-                else cout << "HOA DON NHAP ===\n";
-
-                cout << "1. Them hoa don\n";
-                cout << "2. Xoa hoa don\n";
-                cout << "3. Sua hoa don\n";
-                cout << "4. Tim kiem hoa don\n";
-                cout << "5. Hien thi danh sach\n";
-                cout << "0. Quay lai\n";
-                cout << "Chon: ";
-                cin >> c2;
-
-                switch (c2) {
-                case 1:
-                    if (laBan) ql.ThemBan();
-                    else ql.ThemNhap();
-                    break;
-
-                case 2: ql.Xoa(); break;
-                case 3: ql.Sua(); break;
-                case 4: ql.TimKiem(); break;
-                case 5: ql.HienThi(); break;
-                }
-            } while (c2 != 0);
+        switch (chonChucNang) {
+        case 1:
+            ql.Them();
+            break;
+        case 2:
+            ql.Xoa();
+            break;
+        case 3:
+            ql.Sua();
+            break;
+        case 4:
+            ql.TimKiem();
+            break;
+        case 5:
+            ql.HienThi();
+            break;
         }
-
-    } while (chon != 0);
+    } while (chonChucNang != 0);
 }
+
 
 
 int main() {
@@ -102,8 +92,10 @@ int main() {
 
     qlLoai.DocCSV("data/loaihang.csv");
     qlHang.DocCSV("data/mathang.csv");
-    qlHD.DocCSV("data/hoadonban.csv", true);
-    qlHD.DocCSV("data/hoadonnhap.csv", false);
+
+    qlHD.SetQLMH(&qlHang);
+    qlHD.DocCSV("data/hoadonban.csv", LoaiHoaDon::Ban);
+    qlHD.DocCSV("data/hoadonnhap.csv", LoaiHoaDon::Nhap);
 
     int chon;
     do {
@@ -126,10 +118,12 @@ int main() {
         }
     } while (chon != 0);
 
+    // ghi lại file theo loại hóa đơn
     qlLoai.GhiCSV("data/loaihang.csv");
     qlHang.GhiCSV("data/mathang.csv");
-    qlHD.GhiCSV("data/hoadonban.csv");
-    qlHD.GhiCSV("data/hoadonnhap.csv");
+    qlHD.GhiCSV("data/hoadonban.csv", LoaiHoaDon::Ban);   // chỉ ghi hóa đơn bán
+    qlHD.GhiCSV("data/hoadonnhap.csv", LoaiHoaDon::Nhap); // chỉ ghi hóa đơn nhập
 
     return 0;
 }
+

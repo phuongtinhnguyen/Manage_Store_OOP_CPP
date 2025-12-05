@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include <ctime>
+#include "Module.h"
+
 
 QuanLyMatHang::QuanLyMatHang() {
     soLuong = 0;
@@ -14,13 +16,33 @@ QuanLyMatHang::~QuanLyMatHang() {
 
 void QuanLyMatHang::Them() {
     if (soLuong >= 500) { cout << "Danh sach day.\n"; return; }
+
+    string ma;
+    cout << "Nhap ma hang: ";
+    cin >> ma;
+    cin.ignore();
+
+    for (int i = 0; i < soLuong; ++i) {
+        if (ds[i] && ds[i]->GetMaHang() == ma) {
+            cout << "Ma hang da ton tai!\n";
+            return;
+        }
+    }
+
     MatHang* p = new MatHang();
-    p->Nhap();
+    p->SetMaHang(ma);      // gán mã đã nhập
+    p->Nhap(false);        // nhập các thông tin khác
     ds[soLuong++] = p;
 }
 
+
+
 int findMHIndex(MatHang* arr[], int n, const string& ma) {
-    for (int i = 0; i < n; ++i) if (arr[i] && arr[i]->GetMaHang() == ma) return i;
+    for (int i = 0; i < n; ++i)
+    {
+        if (arr[i] && arr[i]->GetMaHang() == ma)
+            return i;
+    }
     return -1;
 }
 
@@ -40,7 +62,11 @@ void QuanLyMatHang::Sua() {
     string ma;
     cin >> ma;
     int idx = findMHIndex(ds, soLuong, ma);
-    if (idx == -1) { cout << "Khong tim thay.\n"; return; }
+    if (idx == -1)
+    { 
+        cout << "Khong tim thay.\n";
+        return;
+    }
     cout << "Nhap thong tin moi:\n";
     ds[idx]->Nhap();
     cout << "Da cap nhat.\n";
@@ -48,13 +74,18 @@ void QuanLyMatHang::Sua() {
 
 void QuanLyMatHang::TimKiem() {
     cout << "Nhap ma hoac ten can tim: ";
-    string key; cin.ignore(); getline(cin, key);
+    string key; 
+    cin.ignore(); 
+    getline(cin, key);
+    key = ToLower(key);  // chuyển key về chữ thường
+
     bool ok = false;
     for (int i = 0; i < soLuong; ++i) {
         if (ds[i]) {
-            string csv = ds[i]->ToCSV();
+            string csv = ToLower(ds[i]->ToCSV());  // chuyển toàn bộ CSV về chữ thường
             if (csv.find(key) != string::npos) {
-                ds[i]->Xuat(); ok = true;
+                ds[i]->Xuat(); 
+                ok = true;
             }
         }
     }
@@ -66,25 +97,38 @@ void QuanLyMatHang::HienThi() {
     for (int i = 0; i < soLuong; ++i) if (ds[i]) ds[i]->Xuat();
 }
 
-void QuanLyMatHang::CapNhatNhapKho(string maHang, int sl) {
-    int idx = findMHIndex(ds, soLuong, maHang);
-    if (idx == -1) {
-        cout << "Khong tim thay mat hang de cap nhat.\n";
-        return;
-    }
-    int cur = ds[idx]->GetSoLuong();
-    ds[idx]->SetSoLuong(cur + sl);
+MatHang* QuanLyMatHang::TimTheoMa(const string& ma) {
+    for (int i = 0; i < soLuong; ++i)
+        if (ds[i] && ds[i]->GetMaHang() == ma)
+            return ds[i];
+    return nullptr;
 }
 
-void QuanLyMatHang::CapNhatBanHang(string maHang, int sl) {
-    int idx = findMHIndex(ds, soLuong, maHang);
-    if (idx == -1) {
-        cout << "Khong tim thay mat hang de cap nhat.\n";
-        return;
-    }
-    int cur = ds[idx]->GetSoLuong();
-    ds[idx]->SetSoLuong(cur - sl);
+void QuanLyMatHang::ThemMatHangMoi(MatHang* p) {
+    if (soLuong < 500)
+        ds[soLuong++] = p;
 }
+
+
+// void QuanLyMatHang::CapNhatNhapKho(string maHang, int sl) {
+//     int idx = findMHIndex(ds, soLuong, maHang);
+//     if (idx == -1) {
+//         cout << "Khong tim thay mat hang de cap nhat.\n";
+//         return;
+//     }
+//     int cur = ds[idx]->GetSoLuong();
+//     ds[idx]->SetSoLuong(cur + sl);
+// }
+
+// void QuanLyMatHang::CapNhatBanHang(string maHang, int sl) {
+//     int idx = findMHIndex(ds, soLuong, maHang);
+//     if (idx == -1) {
+//         cout << "Khong tim thay mat hang de cap nhat.\n";
+//         return;
+//     }
+//     int cur = ds[idx]->GetSoLuong();
+//     ds[idx]->SetSoLuong(cur - sl);
+// }
 
 void QuanLyMatHang::ThongKeTonKho() {
     cout << "Thong ke ton kho:\n";
@@ -94,9 +138,9 @@ void QuanLyMatHang::ThongKeTonKho() {
 }
 
 static bool isExpired(const string& hanDung) {
-    // expect YYYY-MM-DD
+    // expect DD-MM-YYYY
     int y=0,m=0,d=0;
-    if (sscanf(hanDung.c_str(), "%d-%d-%d", &y, &m, &d) != 3) return false;
+    if (sscanf(hanDung.c_str(), "%d-%d-%d", &d, &m, &y) != 3) return false;
     time_t t = time(NULL);
     struct tm *now = localtime(&t);
     int cy = now->tm_year + 1900;
@@ -125,6 +169,12 @@ void QuanLyMatHang::DocCSV(const string& file) {
         if (line.size() == 0) continue;
         MatHang* p = new MatHang();
         p->FromCSV(line);
+        // ds[soLuong++] = p;
+        if (soLuong >= 500) {
+            cout << "Vuot qua gioi han 500 mat hang!\n";
+            delete p;
+            return;
+        }
         ds[soLuong++] = p;
     }
     ifs.close();
