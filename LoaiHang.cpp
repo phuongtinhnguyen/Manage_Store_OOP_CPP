@@ -1,7 +1,10 @@
 #include "LoaiHang.h"
 #include <sstream>
 
-LoaiHang::LoaiHang() {}
+LoaiHang::LoaiHang() {
+    maLoai = "";
+    tenLoai = "";
+}
 LoaiHang::~LoaiHang() {}
 
 void LoaiHang::Nhap() {
@@ -9,12 +12,13 @@ void LoaiHang::Nhap() {
     getline(cin, tenLoai);
 }
 
-
 void LoaiHang::Xuat() {
     cout << maLoai << " - " << tenLoai << endl;
 }
 
-string LoaiHang::GetMaLoai() { return maLoai; }
+string LoaiHang::GetMaLoai() {
+    return maLoai;
+}
 
 void LoaiHang::SetMaLoai(const string &ma) {
     maLoai = ma;

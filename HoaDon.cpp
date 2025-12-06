@@ -1,6 +1,7 @@
+#include <sstream>
+#include <regex>
 #include "HoaDon.h"
 #include "QuanLyHoaDon.h"
-#include <sstream>
 
 HoaDon::HoaDon() {
     maHD = "";
@@ -11,28 +12,13 @@ HoaDon::HoaDon() {
 
 HoaDon::~HoaDon() {}
 
-
-// void HoaDon::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
-//     cout << "Nhap ngay lap (DD-MM-YYYY): ";
-//     cin >> ngayLap;
-//     if(maHD == "")
-//     {
-//         cout << "Nhap ma hoa don: ";
-//         cin >> maHD;
-//     }
-// }
-
-#include <regex>
-
 void HoaDon::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
-    // ===========================
-    // 1. Nhập ngày lập hóa đơn
-    // ===========================
     regex re_date(R"(^\d{2}-\d{2}-\d{4}$)");
     while (true)
     {
         cout << "Nhap ngay lap (DD-MM-YYYY): ";
         cin >> ngayLap;
+        cin.ignore();
 
         if (!regex_match(ngayLap, re_date)) {
             cout << "Sai dinh dang! Vui long nhap theo dang DD-MM-YYYY.\n";
@@ -73,16 +59,13 @@ void HoaDon::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
         break; // Ngày hợp lệ
     }
 
-    // ===========================
-    // 2. Nhập mã hóa đơn
-    // ===========================
     if (maHD == "")
     {
         cout << "Nhap ma hoa don: ";
         cin >> maHD;
+        cin.ignore();
     }
 }
-
 
 void HoaDon::Xuat() {
     cout << "MaHD: " << maHD
@@ -119,4 +102,3 @@ void HoaDon::SetSoLuong(int sl) {
     if (sl > 0) 
         soLuong = sl;
 }
-

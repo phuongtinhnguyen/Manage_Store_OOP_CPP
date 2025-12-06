@@ -1,6 +1,7 @@
 #pragma once
 #include "HoaDon.h"
 #include "LoaiHoaDon.h"
+
 class HoaDonBan : public HoaDon {
 private:
     LoaiHoaDon loai;

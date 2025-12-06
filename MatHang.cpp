@@ -1,7 +1,7 @@
 #include "MatHang.h"
 #include <fstream>
 #include <sstream>
-#include <iomanip> // cần để dùng setw, left, right
+#include <iomanip>
 
 MatHang::MatHang() {
     maHang = "";
@@ -61,14 +61,24 @@ int MatHang::GetSoLuong() {
     return soLuong;
 }
 
-string MatHang::GetTenHang() { return tenHang; }
-string MatHang::GetCongTy() { return congTy; }
-int MatHang::GetNamSX() { return namSX; }
-string MatHang::GetMaLoai() { return maLoai; }
+string MatHang::GetTenHang() {
+    return tenHang;
+}
+
+string MatHang::GetCongTy() {
+    return congTy;
+}
+
+int MatHang::GetNamSX() {
+    return namSX;
+}
+
+string MatHang::GetMaLoai() {
+    return maLoai;
+}
 
 void MatHang::SetSoLuong(int sl) {
     if (sl < 0) {
-        // Không cập nhật, giữ nguyên số lượng cũ
         return;
     }
     soLuong = sl;

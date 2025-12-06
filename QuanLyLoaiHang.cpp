@@ -5,7 +5,9 @@
 
 QuanLyLoaiHang::QuanLyLoaiHang() {
     soLuong = 0;
-    for (int i = 0; i < 200; ++i) ds[i] = nullptr;
+    for (int i = 0; i < 200; ++i) {
+        ds[i] = nullptr;
+    }
 }
 
 QuanLyLoaiHang::~QuanLyLoaiHang() {
@@ -35,10 +37,9 @@ void QuanLyLoaiHang::Them() {
     // nếu không trùng thì tạo và nhập tên
     LoaiHang* p = new LoaiHang();
     p->SetMaLoai(ma);
-    cin.ignore(); // dọn bộ nhớ đệm trước getline
-    p->Nhap();    // chỉ nhập tên loai
+    cin.ignore();
+    p->Nhap();
     ds[soLuong++] = p;
-
     cout << "Da them loai hang.\n";
 }
 
@@ -50,7 +51,9 @@ int findIndex(LoaiHang* arr[], int n, const string& ma) {
 
 void QuanLyLoaiHang::Xoa() {
     cout << "Nhap ma loai can xoa: ";
-    string ma; cin >> ma;
+    string ma;
+    cin >> ma;
+    cin.ignore();
     int idx = findIndex(ds, soLuong, ma);
     if (idx == -1) {
         cout << "Khong tim thay.\n";
@@ -64,9 +67,15 @@ void QuanLyLoaiHang::Xoa() {
 
 void QuanLyLoaiHang::Sua() {
     cout << "Nhap ma loai can sua: ";
-    string ma; cin >> ma;
+    string ma;
+    cin >> ma;
+    cin.ignore();
     int idx = findIndex(ds, soLuong, ma);
-    if (idx == -1) { cout << "Khong tim thay.\n"; return; }
+    if (idx == -1)
+    {
+        cout << "Khong tim thay.\n";
+        return;
+    }
     cout << "Nhap thong tin moi:\n";
     ds[idx]->Nhap();
     cout << "Da cap nhat.\n";
@@ -74,20 +83,18 @@ void QuanLyLoaiHang::Sua() {
 
 void QuanLyLoaiHang::TimKiem() {
     cout << "Nhap ma hoac ten can tim: ";
-    string key; 
-    cin.ignore();
+    string key;
+    cin.ignore(); 
     getline(cin, key);
-    key = ToLower(key);  // chuyển key về chữ thường
+    key = ToLower(key);
 
     bool ok = false;
     for (int i = 0; i < soLuong; ++i) {
         if (ds[i]) {
-            // so sánh mã loại
             if (ToLower(ds[i]->GetMaLoai()) == key) {
                 ds[i]->Xuat();
                 ok = true;
             } else {
-                // hoặc tìm trong CSV
                 string csv = ToLower(ds[i]->ToCSV());
                 if (csv.find(key) != string::npos) {
                     ds[i]->Xuat();

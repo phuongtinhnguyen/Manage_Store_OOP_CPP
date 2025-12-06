@@ -27,6 +27,7 @@ public:
     string GetCongTy();
     int GetNamSX();
     string GetMaLoai();
+
     void SetSoLuong(int sl);
     void SetMaHang(const string &ma);
 

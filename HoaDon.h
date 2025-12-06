@@ -3,11 +3,10 @@
 #include <string>
 #include "QuanLyMatHang.h"
 #include "LoaiHoaDon.h"
-
-class QuanLyHoaDon; // <-- forward declaration
 using namespace std;
 
-
+// forward declaration
+class QuanLyHoaDon;
 
 class HoaDon {
 protected:
@@ -32,7 +31,6 @@ public:
     void SetNgayLap(const string& s);
     void SetMaHang(const string& s);
     void SetSoLuong(int sl);
-
 
     virtual LoaiHoaDon GetLoai() = 0;
     virtual string ToCSV() = 0;

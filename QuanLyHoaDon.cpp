@@ -27,6 +27,7 @@ void QuanLyHoaDon::Them() {
     do {
         cout << "Nhap loai hoa don (1. Hoa don ban, 2. Hoa don nhap): ";
         cin >> chonLoai;
+        cin.ignore();
     }
     while (chonLoai != 1 && chonLoai !=2);
 
@@ -50,6 +51,7 @@ void QuanLyHoaDon::Xoa() {
     do {
         cout << "Nhap loai hoa don (1. Hoa don ban, 2. Hoa don nhap): ";
         cin >> chonLoai;
+        cin.ignore();
     }
     while (chonLoai != 1 && chonLoai !=2);
 
@@ -65,6 +67,7 @@ void QuanLyHoaDon::Xoa() {
     string ma;
     cout << "Nhap ma hoa don can xoa: ";
     cin >> ma;
+    cin.ignore();
     int idx = -1;
     for (int i = 0; i < soLuong; ++i)
     {
@@ -91,8 +94,6 @@ void QuanLyHoaDon::Xoa() {
     else
     {
         if (mh) {
-            // mh->SetSoLuong(mh->GetSoLuong() - ds[idx]->GetSoLuong());
-
             if (ds[idx]->GetLoai() == LoaiHoaDon::Nhap) {
                 if (mh->GetSoLuong() < ds[idx]->GetSoLuong()) {
                     cout << "Khong the xoa. Ton kho khong du de rollback!\n";
@@ -119,6 +120,7 @@ void QuanLyHoaDon::Sua() {
     do {
         cout << "Nhap loai hoa don (1. Hoa don ban, 2. Hoa don nhap): ";
         cin >> chonLoai;
+        cin.ignore();
     }
     while (chonLoai != 1 && chonLoai !=2);
 
@@ -135,6 +137,7 @@ void QuanLyHoaDon::Sua() {
     string ma;
     cout << "Nhap ma hoa don can sua: ";
     cin >> ma;
+    cin.ignore();
     int idx = -1;
     for (int i = 0; i < soLuong; ++i)
     {
@@ -177,16 +180,6 @@ void QuanLyHoaDon::Sua() {
     cout << "Da cap nhat.\n";
 }
 
-// void QuanLyHoaDon::TimKiem() {
-//     string key; cout << "Nhap ma hoa don hoac ma hang can tim: "; cin >> key;
-//     bool ok = false;
-//     for (int i = 0; i < soLuong; ++i)
-//         if (ds[i] && (ds[i]->GetMaHD() == key || ds[i]->GetMaHang() == key)) {
-//             ds[i]->Xuat(); ok = true;
-//         }
-//     if (!ok) cout << "Khong co ket qua.\n";
-// }
-
 void QuanLyHoaDon::TimKiem() {
     int loai;
     cout << "Chon loai hoa don can tim:\n";
@@ -194,15 +187,18 @@ void QuanLyHoaDon::TimKiem() {
     cout << "2. Hoa don nhap\n";
     cout << "Nhap lua chon: ";
     cin >> loai;
+    cin.ignore();
 
     while (loai != 1 && loai != 2) {
         cout << "Lua chon khong hop le. Nhap lai (1-Ban, 2-Nhap): ";
         cin >> loai;
+        cin.ignore();
     }
 
     string key;
     cout << "Nhap ma hoa don hoac ma hang can tim: ";
     cin >> key;
+    cin.ignore();
 
     bool ok = false;
 
@@ -224,14 +220,6 @@ void QuanLyHoaDon::TimKiem() {
     if (!ok) cout << "Khong co ket qua.\n";
 }
 
-
-// void QuanLyHoaDon::HienThi(LoaiHoaDon loai) {
-//     cout << "Danh sach hoa don " << (loai == LoaiHoaDon::Ban ? "BAN" : "NHAP") << ":\n";
-//     for (int i = 0; i < soLuong; ++i)
-//         if (ds[i] && ds[i]->GetLoai() == loai)
-//             ds[i]->Xuat();
-// }
-
 void QuanLyHoaDon::HienThi() {
     int chon;
     cout << "\n=== CHON LOAI HOA DON DE HIEN THI ===\n";
@@ -239,6 +227,7 @@ void QuanLyHoaDon::HienThi() {
     cout << "2. HOA DON NHAP\n";
     cout << "Chon: ";
     cin >> chon;
+    cin.ignore();
 
     LoaiHoaDon loai;
     if (chon == 1)
@@ -264,14 +253,6 @@ void QuanLyHoaDon::HienThi() {
     if (!found)
         cout << "Khong co hoa don nao thuoc loai nay!\n";
 }
-
-
-// HoaDon* QuanLyHoaDon::TimTheoMa(const string& ma) {
-//     for (int i = 0; i < soLuong; ++i)
-//         if (ds[i] && ds[i]->GetMaHD() == ma)
-//             return ds[i];
-//     return nullptr;
-// }
 
 HoaDon* QuanLyHoaDon::TimTheoMa(const string& ma, LoaiHoaDon loai) {
     for (int i = 0; i < soLuong; ++i) {
@@ -312,7 +293,6 @@ void QuanLyHoaDon::DocCSV(const string& file, LoaiHoaDon loai) {
     }
     ifs.close();
 }
-
 
 void QuanLyHoaDon::GhiCSV(const string& file, LoaiHoaDon loai) {
     ofstream ofs(file); if (!ofs.is_open()) return;

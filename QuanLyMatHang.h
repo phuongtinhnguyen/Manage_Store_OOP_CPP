@@ -19,9 +19,6 @@ public:
     MatHang* TimTheoMa(const string& ma);
     void ThemMatHangMoi(MatHang* p);
 
-    // void CapNhatNhapKho(string maHang, int sl);
-    // void CapNhatBanHang(string maHang, int sl);
-
     void ThongKeTonKho();
     void ThongKeHetHan();
 

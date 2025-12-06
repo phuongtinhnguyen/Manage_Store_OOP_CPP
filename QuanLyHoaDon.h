@@ -22,7 +22,6 @@ public:
     void HienThi();
 
     void SetQLMH(QuanLyMatHang* p);
-
     HoaDon* TimTheoMa(const string& ma, LoaiHoaDon loai);
     
     int GetSoLuong() const {

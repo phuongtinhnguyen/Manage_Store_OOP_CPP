@@ -1,8 +1,8 @@
+#include <sstream>
+#include <iostream>
 #include "HoaDonNhap.h"
 #include "QuanLyHoaDon.h"
 #include "QuanLyMatHang.h"
-#include <sstream>
-#include <iostream>
 using namespace std;
 
 HoaDonNhap::HoaDonNhap() : HoaDon() {
@@ -29,12 +29,6 @@ void HoaDonNhap::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
     HoaDon::Nhap(qlMH, qlHD);
 
     // Kiểm tra maHD
-    // while (qlHD->TimTheoMa(maHD))
-    // {
-    //     cout << "Ma hoa don bi trung!";
-    //     cout << "Vui long nhap lai ma hoa don khac: ";
-    //     cin >> maHD;
-    // }
     // Nhap moi hoa don thi kiem tra, sua hoa don (da ton tai maHang) thi khong kiem tra
     if(maHang == "") 
     {
@@ -44,13 +38,14 @@ void HoaDonNhap::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
                 break;
             cout << "Ma hoa don bi trung! Nhap lai: ";
             cin >> maHD;
+            cin.ignore();
         }
     }
-
 
     // Nhap maHang
     cout << "Nhap ma hang: ";
     cin >> maHang;
+    cin.ignore();
 
     // Kiem tra maHang
     MatHang* mh = qlMH->TimTheoMa(maHang);
@@ -64,6 +59,7 @@ void HoaDonNhap::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
     } else {
         cout << "Nhap so luong nhap: ";
         cin >> soLuong;
+        cin.ignore();
         if (soLuong <= 0)
         {
             cout << "So luong khong hop le!\n";

@@ -1,10 +1,10 @@
-#include "HoaDonBan.h"
+#include <regex>
 #include <sstream>
 #include <iostream>
 #include "MatHang.h"
+#include "HoaDonBan.h"
 #include "QuanLyMatHang.h"
 #include "QuanLyHoaDon.h"
-#include <regex>
 using namespace std;
 
 HoaDonBan::HoaDonBan() : HoaDon() {
@@ -31,12 +31,6 @@ void HoaDonBan::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
     HoaDon::Nhap(qlMH, qlHD); 
 
     // Kiểm tra maHD
-    // while (qlHD->TimTheoMa(maHD))
-    // {
-    //     cout << "Ma hoa don bi trung!";
-    //     cout << "Vui long nhap lai ma hoa don khac: ";
-    //     cin >> maHD;
-    // }
     // Nhap moi hoa don thi kiem tra, sua hoa don (da ton tai maHang) thi khong kiem tra
     if(maHang == "") 
     {
@@ -46,32 +40,41 @@ void HoaDonBan::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
                 break;
             cout << "Ma hoa don bi trung! Nhap lai: ";
             cin >> maHD;
+            cin.ignore();
         }
     }
 
     // Nhap maHang
     cout << "Nhap ma hang: ";
     cin >> maHang;
+    cin.ignore();
 
     // Kiem tra maHang
-    while (!qlMH->TimTheoMa(maHang))
+    MatHang* mh = qlMH->TimTheoMa(maHang);
+
+    while (mh == nullptr || mh->GetSoLuong() <= 0)
     {
-        cout << "Khong ton tai ma hang nay!";
-        cout << "Vui long nhap lai ma hang khac: ";
+        cout << "Ma hang khong ton tai hoac so luong trong kho = 0!\n";
+        cout << "Vui long nhap ma hang khac: ";
         cin >> maHang;
+        cin.ignore();
+
+        mh = qlMH->TimTheoMa(maHang);
     }
 
     // Nhap soLuong
     cout << "Nhap so luong ban: ";
     cin >> soLuong;
+    cin.ignore();
 
     // Kiem tra soLuong
-    MatHang* mh = qlMH->TimTheoMa(maHang);
+    // MatHang* mh = qlMH->TimTheoMa(maHang);
     while (soLuong <= 0 || soLuong > mh->GetSoLuong())
     {
         cout << "So luong khong hop le hoac vuot qua ton kho (" << mh->GetSoLuong() << ")!" << endl;
         cout << "Vui long nhap lai so luong khac: ";
         cin >> soLuong;
+        cin.ignore();
     }
 
     mh->SetSoLuong(mh->GetSoLuong() - soLuong);

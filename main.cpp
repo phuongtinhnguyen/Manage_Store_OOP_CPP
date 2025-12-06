@@ -16,6 +16,7 @@ void MenuLoaiHang(QuanLyLoaiHang &ql) {
         cout << "0. Quay lai\n";
         cout << "Chon: ";
         cin >> chon;
+        cin.ignore();
 
         switch (chon) {
         case 1: ql.Them(); break;
@@ -39,6 +40,7 @@ void MenuMatHang(QuanLyMatHang &ql) {
         cout << "0. Quay lai\n";
         cout << "Chon: ";
         cin >> chon;
+        cin.ignore();
 
         switch (chon) {
         case 1: ql.Them(); break;
@@ -62,6 +64,7 @@ void MenuHoaDon(QuanLyHoaDon &ql) {
         cout << "0. Quay lai\n";
         cout << "Chon: ";
         cin >> chonChucNang;
+        cin.ignore();
 
         switch (chonChucNang) {
         case 1:
@@ -82,8 +85,6 @@ void MenuHoaDon(QuanLyHoaDon &ql) {
         }
     } while (chonChucNang != 0);
 }
-
-
 
 int main() {
     QuanLyLoaiHang qlLoai;
@@ -108,6 +109,7 @@ int main() {
         cout << "0. Thoat\n";
         cout << "Chon: ";
         cin >> chon;
+        cin.ignore();
 
         switch (chon) {
         case 1: MenuLoaiHang(qlLoai); break;
