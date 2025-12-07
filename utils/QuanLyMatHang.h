@@ -10,6 +10,8 @@ public:
     QuanLyMatHang();
     ~QuanLyMatHang();
 
+    void MenuMatHang();
+
     void Them();
     void Xoa();
     void Sua();

@@ -1,90 +1,8 @@
 #include <iostream>
-#include "QuanLyLoaiHang.h"
-#include "QuanLyMatHang.h"
-#include "QuanLyHoaDon.h"
+#include "utils/QuanLyLoaiHang.h"
+#include "utils/QuanLyMatHang.h"
+#include "utils/QuanLyHoaDon.h"
 using namespace std;
-
-void MenuLoaiHang(QuanLyLoaiHang &ql) {
-    int chon;
-    do {
-        cout << "\n=== QUAN LY LOAI HANG ===\n";
-        cout << "1. Them loai hang\n";
-        cout << "2. Xoa loai hang\n";
-        cout << "3. Sua loai hang\n";
-        cout << "4. Tim kiem loai hang\n";
-        cout << "5. Hien thi danh sach\n";
-        cout << "0. Quay lai\n";
-        cout << "Chon: ";
-        cin >> chon;
-        cin.ignore();
-
-        switch (chon) {
-        case 1: ql.Them(); break;
-        case 2: ql.Xoa(); break;
-        case 3: ql.Sua(); break;
-        case 4: ql.TimKiem(); break;
-        case 5: ql.HienThi(); break;
-        }
-    } while (chon != 0);
-}
-
-void MenuMatHang(QuanLyMatHang &ql) {
-    int chon;
-    do {
-        cout << "\n=== QUAN LY MAT HANG ===\n";
-        cout << "1. Them mat hang\n";
-        cout << "2. Xoa mat hang\n";
-        cout << "3. Sua mat hang\n";
-        cout << "4. Tim kiem mat hang\n";
-        cout << "5. Hien thi danh sach\n";
-        cout << "0. Quay lai\n";
-        cout << "Chon: ";
-        cin >> chon;
-        cin.ignore();
-
-        switch (chon) {
-        case 1: ql.Them(); break;
-        case 2: ql.Xoa(); break;
-        case 3: ql.Sua(); break;
-        case 4: ql.TimKiem(); break;
-        case 5: ql.HienThi(); break;
-        }
-    } while (chon != 0);
-}
-
-void MenuHoaDon(QuanLyHoaDon &ql) {
-    int chonChucNang;
-    do {
-        cout << "\n=== QUAN LY HOA DON ===\n";
-        cout << "1. Them hoa don\n";
-        cout << "2. Xoa hoa don\n";
-        cout << "3. Sua hoa don\n";
-        cout << "4. Tim kiem hoa don\n";
-        cout << "5. Hien thi danh sach\n";
-        cout << "0. Quay lai\n";
-        cout << "Chon: ";
-        cin >> chonChucNang;
-        cin.ignore();
-
-        switch (chonChucNang) {
-        case 1:
-            ql.Them();
-            break;
-        case 2:
-            ql.Xoa();
-            break;
-        case 3:
-            ql.Sua();
-            break;
-        case 4:
-            ql.TimKiem();
-            break;
-        case 5:
-            ql.HienThi();
-            break;
-        }
-    } while (chonChucNang != 0);
-}
 
 int main() {
     QuanLyLoaiHang qlLoai;
@@ -112,20 +30,18 @@ int main() {
         cin.ignore();
 
         switch (chon) {
-        case 1: MenuLoaiHang(qlLoai); break;
-        case 2: MenuMatHang(qlHang); break;
-        case 3: MenuHoaDon(qlHD); break;
+        case 1: qlLoai.MenuLoaiHang(); break;
+        case 2: qlHang.MenuMatHang(); break;
+        case 3: qlHD.MenuHoaDon(); break;
         case 4: qlHang.ThongKeTonKho(); break;
         case 5: qlHang.ThongKeHetHan(); break;
         }
     } while (chon != 0);
 
-    // ghi lại file theo loại hóa đơn
     qlLoai.GhiCSV("data/loaihang.csv");
     qlHang.GhiCSV("data/mathang.csv");
-    qlHD.GhiCSV("data/hoadonban.csv", LoaiHoaDon::Ban);   // chỉ ghi hóa đơn bán
-    qlHD.GhiCSV("data/hoadonnhap.csv", LoaiHoaDon::Nhap); // chỉ ghi hóa đơn nhập
+    qlHD.GhiCSV("data/hoadonban.csv", LoaiHoaDon::Ban);
+    qlHD.GhiCSV("data/hoadonnhap.csv", LoaiHoaDon::Nhap);
 
     return 0;
 }
-

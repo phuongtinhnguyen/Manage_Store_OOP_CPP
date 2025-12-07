@@ -16,6 +16,30 @@ QuanLyLoaiHang::~QuanLyLoaiHang() {
     }
 }
 
+void QuanLyLoaiHang::MenuLoaiHang() {
+    int chon;
+    do {
+        cout << "\n=== QUAN LY LOAI HANG ===\n";
+        cout << "1. Them loai hang\n";
+        cout << "2. Xoa loai hang\n";
+        cout << "3. Sua loai hang\n";
+        cout << "4. Tim kiem loai hang\n";
+        cout << "5. Hien thi danh sach\n";
+        cout << "0. Quay lai\n";
+        cout << "Chon: ";
+        cin >> chon;
+        cin.ignore();
+
+        switch (chon) {
+        case 1: this->Them(); break;
+        case 2: this->Xoa(); break;
+        case 3: this->Sua(); break;
+        case 4: this->TimKiem(); break;
+        case 5: this->HienThi(); break;
+        }
+    } while (chon != 0);
+}
+
 void QuanLyLoaiHang::Them() {
     if (soLuong >= 200) {
         cout << "Danh sach day.\n";
@@ -108,7 +132,7 @@ void QuanLyLoaiHang::TimKiem() {
 }
 
 void QuanLyLoaiHang::HienThi() {
-    cout << "Danh sach loai hang:\n";
+    cout << "\nDanh sach loai hang:\n";
     for (int i = 0; i < soLuong; ++i) {
         if (ds[i]) ds[i]->Xuat();
     }

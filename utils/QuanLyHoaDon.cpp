@@ -17,6 +17,40 @@ QuanLyHoaDon::~QuanLyHoaDon() {
         if (ds[i]) delete ds[i];
 }
 
+void QuanLyHoaDon::MenuHoaDon() {
+    int chonChucNang;
+    do {
+        cout << "\n=== QUAN LY HOA DON ===\n";
+        cout << "1. Them hoa don\n";
+        cout << "2. Xoa hoa don\n";
+        cout << "3. Sua hoa don\n";
+        cout << "4. Tim kiem hoa don\n";
+        cout << "5. Hien thi danh sach\n";
+        cout << "0. Quay lai\n";
+        cout << "Chon: ";
+        cin >> chonChucNang;
+        cin.ignore();
+
+        switch (chonChucNang) {
+        case 1:
+            this->Them();
+            break;
+        case 2:
+            this->Xoa();
+            break;
+        case 3:
+            this->Sua();
+            break;
+        case 4:
+            this->TimKiem();
+            break;
+        case 5:
+            this->HienThi();
+            break;
+        }
+    } while (chonChucNang != 0);
+}
+
 void QuanLyHoaDon::SetQLMH(QuanLyMatHang* p)
 {
     qlMH = p;
@@ -182,10 +216,7 @@ void QuanLyHoaDon::Sua() {
 
 void QuanLyHoaDon::TimKiem() {
     int loai;
-    cout << "Chon loai hoa don can tim:\n";
-    cout << "1. Hoa don ban\n";
-    cout << "2. Hoa don nhap\n";
-    cout << "Nhap lua chon: ";
+    cout << "Nhap loai hoa don (1. Hoa don ban, 2. Hoa don nhap): ";
     cin >> loai;
     cin.ignore();
 
@@ -222,10 +253,7 @@ void QuanLyHoaDon::TimKiem() {
 
 void QuanLyHoaDon::HienThi() {
     int chon;
-    cout << "\n=== CHON LOAI HOA DON DE HIEN THI ===\n";
-    cout << "1. HOA DON BAN\n";
-    cout << "2. HOA DON NHAP\n";
-    cout << "Chon: ";
+    cout << "Nhap loai hoa don (1. Hoa don ban, 2. Hoa don nhap): ";
     cin >> chon;
     cin.ignore();
 

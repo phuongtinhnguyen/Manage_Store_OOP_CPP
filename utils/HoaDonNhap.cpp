@@ -72,10 +72,7 @@ void HoaDonNhap::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
 }
 
 void HoaDonNhap::Xuat() {
-    cout << "[NHAP] MaHD: " << maHD
-         << " | Ngay: " << ngayLap
-         << " | MaHang: " << maHang
-         << " | SoLuong: " << soLuong << "\n";
+    HoaDon::Xuat();
 }
 
 LoaiHoaDon HoaDonNhap::GetLoai()

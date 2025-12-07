@@ -10,6 +10,8 @@ public:
     QuanLyLoaiHang();
     ~QuanLyLoaiHang();
 
+    void MenuLoaiHang();
+
     void Them();
     void Xoa();
     void Sua();

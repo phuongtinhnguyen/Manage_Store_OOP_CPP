@@ -83,10 +83,7 @@ void HoaDonBan::Nhap(QuanLyMatHang* const qlMH, QuanLyHoaDon* const qlHD) {
 }
 
 void HoaDonBan::Xuat() {
-    cout << "[BAN] MaHD: " << maHD
-         << " | Ngay: " << ngayLap
-         << " | MaHang: " << maHang
-         << " | SoLuong: " << soLuong << "\n";
+    HoaDon::Xuat();
 }
 
 LoaiHoaDon HoaDonBan::GetLoai()

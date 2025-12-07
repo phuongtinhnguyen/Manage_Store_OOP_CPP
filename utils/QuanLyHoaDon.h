@@ -15,6 +15,8 @@ public:
     QuanLyHoaDon();
     ~QuanLyHoaDon();
 
+    void MenuHoaDon();
+
     void Them();
     void Xoa();
     void Sua();

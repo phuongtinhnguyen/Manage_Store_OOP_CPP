@@ -1,7 +1,9 @@
 #include "MatHang.h"
+#include "Module.h"
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <regex>
 
 MatHang::MatHang() {
     maHang = "";
@@ -23,8 +25,9 @@ void MatHang::Nhap(bool nhapMa) {
     }
     cout << "Nhap ten hang: ";
     getline(cin, tenHang);
-    cout << "Nhap han dung (DD-MM-YYYY): ";
-    getline(cin, hanDung);
+
+    hanDung = InputValidDate("Nhap han dung (DD-MM-YYYY): ");
+
     cout << "Nhap cong ty san xuat: ";
     getline(cin, congTy);
     cout << "Nhap nam san xuat: ";

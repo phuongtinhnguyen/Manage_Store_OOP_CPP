@@ -13,6 +13,30 @@ QuanLyMatHang::~QuanLyMatHang() {
     for (int i = 0; i < soLuong; ++i) if (ds[i]) delete ds[i];
 }
 
+void QuanLyMatHang::MenuMatHang() {
+    int chon;
+    do {
+        cout << "\n=== QUAN LY MAT HANG ===\n";
+        cout << "1. Them mat hang\n";
+        cout << "2. Xoa mat hang\n";
+        cout << "3. Sua mat hang\n";
+        cout << "4. Tim kiem mat hang\n";
+        cout << "5. Hien thi danh sach\n";
+        cout << "0. Quay lai\n";
+        cout << "Chon: ";
+        cin >> chon;
+        cin.ignore();
+
+        switch (chon) {
+        case 1: this->Them(); break;
+        case 2: this->Xoa(); break;
+        case 3: this->Sua(); break;
+        case 4: this->TimKiem(); break;
+        case 5: this->HienThi(); break;
+        }
+    } while (chon != 0);
+}
+
 void QuanLyMatHang::Them() {
     if (soLuong >= 500) { 
         cout << "Danh sach day.\n"; return;
